@@ -10,16 +10,25 @@ class App extends React.Component {
     super();
     this.state = {
       products: data.products,
-      cartItems: [],
+      cartItems: localStorage.getItem("cartItems")
+      ? JSON.parse(localStorage.getItem("cartItems"))
+      : [],
       size: "",
       sort: "",
     };
   }
+  createOrder = (order) => {
+    alert("Nedd to save order for " + order.name);
+  }
   removeFromCart = (product) => {
     const cartItems = this.state.cartItems.slice();
     this.setState({
-      cartItems:cartItems.filter(x=>x._id !== product._id),
+      cartItems: cartItems.filter((x) => x._id !== product._id),
     });
+    localStorage.setItem(
+      "cartItems", 
+      JSON.stringify(cartItems.filter((x) => x._id !== product._id))
+    );
   };
   addToCart =(product) => {
     const cartItems = this.state.cartItems.slice();
@@ -34,7 +43,8 @@ class App extends React.Component {
       cartItems.push({ ...product, count: 1 });
     }
     this.setState({cartItems});
-  }
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
   sortProducts = (event) => {
     // impl
     const sort = event.target.value;
@@ -81,11 +91,12 @@ class App extends React.Component {
         <main>
           <div className="content">
             <div className="main">
-              <Filter count={this.state.products.length}
-              size={this.state.size}
-              sort={this.state.sort}
-              filterProducts={this.filterProducts}
-              sortProducts={this.sortProducts}
+              <Filter 
+                count={this.state.products.length}
+                size={this.state.size}
+                sort={this.state.sort}
+                filterProducts={this.filterProducts}
+                sortProducts={this.sortProducts}
               ></Filter>
               <Products 
                 products={this.state.products}
@@ -93,8 +104,10 @@ class App extends React.Component {
               ></Products>
             </div>
             <div className="sidebar">
-              <Cart cartItems={this.state.cartItems}
-              removeFromCart={this.removeFromCart}
+              <Cart 
+                cartItems={this.state.cartItems}
+                removeFromCart={this.removeFromCart}
+                createOrder={this.createOrder}
               />
             </div>
           </div>
