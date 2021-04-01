@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import Zoom from "react-reveal/Zoom";
 import { removeFromCart } from "../actions/cartActions";
-// import { createOrder, clearOrder } from "../actions/orderActions";
+import { createOrder, clearOrder } from "../actions/orderActions";
 
 class Cart extends Component {
   constructor(props) {
@@ -189,8 +189,8 @@ class Cart extends Component {
 
 export default connect(
   (state) => ({
-    // order: state.order.order,
+    order: state.order.order,
     cartItems: state.cart.cartItems,
   }),
-  { removeFromCart }
+  { removeFromCart, createOrder, clearOrder }
 )(Cart);
